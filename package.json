@@ -1,6 +1,6 @@
 {
   "name": "redux-useful",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "my useful store with redux, redux-saga, redux-persist",
   "main": "build/index.js",
   "dependencies": {
