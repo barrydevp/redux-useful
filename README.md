@@ -2,7 +2,9 @@
 
 Persist and rehydrate a redux store.
 
-[npm version 6.12.1](https://www.npmjs.com/package/redux-useful) [npm downloads](https://www.npmjs.com/package/redux-useful)
+[![NPM version](https://img.shields.io/npm/v/redux-useful.svg?style=flat)](https://www.npmjs.com/package/redux-useful)
+[![NPM downloads](http://img.shields.io/npm/dm/redux-useful.svg?style=flat)](https://www.npmjs.com/package/redux-useful)
+[Git](https://github.com/barrydevp/redux-useful)
 
 ## Quickstart
 `npm install redux-useful`
@@ -50,7 +52,9 @@ export default {
 import { createStoreFul } from "redux-useful";
 import counterModel from "./counterModel.js";
 
-const models = [counterModel];
+const models = {
+  counter: counterModel
+};
 
 const { store } = createStoreFul(models, {
   reduxPersist: false
@@ -100,7 +104,9 @@ import { createStoreFul } from "redux-useful";
 import { AsyncStorage } from "react-native";
 import counterModel from "./counterModel.js";
 
-const models = [counterModel];
+const models = {
+  counter: counterModel
+};
 
 const rootModel = {
   persistConfig: {
