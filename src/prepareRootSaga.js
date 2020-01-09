@@ -14,9 +14,7 @@ export default function prepareRootSaga(
   return function*() {
     const allSagas = createRootSagas();
 
-    // console.log(allSagas);
-
-    yield sagaEffects.all(allSagas);
+    yield sagaEffects.fork(allSagas);
   };
 
   function createWatcherSaga(key, effect, type, ms, delayMs) {
@@ -60,33 +58,48 @@ export default function prepareRootSaga(
   }
 
   function createRootSagas() {
-    return Object.values(models).reduce((previous, model) => {
-      // console.log(model);
-      const sagas = model.sagas;
+    return function*() {
+      for (const key in models) {
+        // Log.warn(models[key]);
+        const { sagas, namespace } = models[key];
 
-      if (!is.object(sagas) && !is.array(sagas)) {
-        Log.warn(`sagas is not object or array`);
+        if (!is.object(sagas) && !is.array(sagas)) {
+          Log.warn(`sagas is not object or array`);
 
-        return previous;
-      }
-
-      const activeSagas = Object.keys(sagas).map(key => {
-        const saga = sagas[key];
-        let effect, options;
-
-        if (is.array(saga)) {
-          effect = saga[0];
-          options = saga[1];
-        } else {
-          effect = saga;
+          continue;
         }
 
-        const { type, ms, delayMs } = options || {};
+        const watcher = function*() {
+          try {
+            const activeSagas = Object.keys(sagas).map(_key => {
+              const saga = sagas[_key];
+              let effect, options;
 
-        return createWatcherSaga(key, effect, type, ms, delayMs)();
-      });
+              if (is.array(saga)) {
+                effect = saga[0];
+                options = saga[1];
+              } else {
+                effect = saga;
+              }
 
-      return previous.concat(activeSagas);
-    }, []);
+              const { type, ms, delayMs } = options || {};
+
+              return createWatcherSaga(_key, effect, type, ms, delayMs)();
+            });
+
+            yield sagaEffects.all(activeSagas);
+          } catch (e) {
+            onError(e);
+          }
+        };
+
+        const task = yield sagaEffects.fork(watcher);
+
+        yield sagaEffects.fork(function*() {
+          yield sagaEffects.take(`${namespace}/~@~CANCEL_EFFECTS`);
+          yield sagaEffects.cancel(task);
+        });
+      }
+    };
   }
 }

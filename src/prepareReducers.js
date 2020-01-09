@@ -30,32 +30,40 @@ export default function prepareReducers(
   function getHandleReducer(type, handles) {
     // console.log(handles);
     // console.log(type);
-    if (!handles || !is.object(handles) || is.undef(type)) {
+    if (!is.object(handles) || is.undef(type)) {
       Log.warn(`reducers is not object and type is undefined`);
       return;
     }
     return handles[type];
   }
 
-  function getReducer(handles, beforeHandle) {
-    return (state = [], action) => {
+  function getReducer(handles, beforeHandle, iniState) {
+    return (state = iniState, action) => {
       const { type } = action;
       const handleReducer = getHandleReducer(type, handles);
 
       is.func(beforeHandle) && (state = beforeHandle(state, action));
 
-      return (handleReducer && handleReducer(state, action)) || state;
+      let newState;
+      is.func(handleReducer) && (newState = handleReducer(state, action));
+
+      return !is.undef(newState) ? newState : state;
     };
   }
 
-  function getReducerWithPersist(handles, beforeHandle, persistConfig) {
+  function getReducerWithPersist(
+    handles,
+    beforeHandle,
+    iniState,
+    persistConfig
+  ) {
     return persistReducer(
       {
         storage: defaultStorage,
         stateReconciler: defaultStateReconciler,
         ...persistConfig
       },
-      (state = [], action) => {
+      (state = iniState, action) => {
         const { type } = action;
         const handleReducer = getHandleReducer(type, handles);
 
@@ -70,6 +78,7 @@ export default function prepareReducers(
     return Object.values(models).reduce((previos, model) => {
       const {
         persistConfig,
+        state,
         reducers: { handles, beforeHandle },
         namespace
       } = model;
@@ -81,11 +90,16 @@ export default function prepareReducers(
 
       if (!reduxPersist || is.undef(persistConfig))
         return Object.assign(previos, {
-          [namespace]: getReducer(handles, beforeHandle)
+          [namespace]: getReducer(handles, beforeHandle, state)
         });
 
       return Object.assign(previos, {
-        [namespace]: getReducerWithPersist(handles, beforeHandle, persistConfig)
+        [namespace]: getReducerWithPersist(
+          handles,
+          beforeHandle,
+          state,
+          persistConfig
+        )
       });
     }, {});
   }
