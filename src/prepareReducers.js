@@ -30,8 +30,8 @@ export default function prepareReducers(
   function getHandleReducer(type, handles) {
     // console.log(handles);
     // console.log(type);
-    if (!is.object(handles) || is.undef(type)) {
-      Log.warn(`reducers is not object and type is undefined`);
+    if (!is.object(handles) || !is.string(type)) {
+      Log.warn(`reducers is not object or type is not string`);
       return;
     }
     return handles[type];
@@ -83,7 +83,7 @@ export default function prepareReducers(
         namespace
       } = model;
 
-      if (!namespace) {
+      if (!is.string(namespace)) {
         Log.error(`missing namespace of model: ${model}`);
         return previos;
       }

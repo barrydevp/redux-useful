@@ -1,6 +1,6 @@
 # Redux Useful
 
-Persist and rehydrate a redux store.
+Useful Store
 
 [![NPM version](https://img.shields.io/npm/v/redux-useful.svg?style=flat)](https://www.npmjs.com/package/redux-useful)
 [![NPM downloads](http://img.shields.io/npm/dm/redux-useful.svg?style=flat)](https://www.npmjs.com/package/redux-useful)
@@ -14,7 +14,8 @@ Usage Examples:
 2. [Store with Persist](#store-with-persist)
 
 #### Basic Usage
-Basic create Store without Persist [more abou redux-persist here](https://github.com/rt2zz/redux-persist)
+Basic create Store without Persist [more about redux-persist here](https://github.com/rt2zz/redux-persist)
+[Example source code](https://github.com/barrydevp/redux-useful-beginner-tutorial)
 
 ```js
 // counterModel.js
