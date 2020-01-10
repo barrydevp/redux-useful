@@ -17,10 +17,9 @@ export default function createStoreFul(models, options = defaultOptions) {
 
   reduxPersist = !!reduxPersist;
   is.object(root) || (root = {});
-  is.object(rootPersistConfig) || (rootPersistConfig = {});
 
   const { persistConfig: rootPersistConfig } = root;
-  const { storage, stateReconciler } = rootPersistConfig;
+  const { storage, stateReconciler } = rootPersistConfig || {};
   // console.log(reduxPersist);
   if (!storage || !stateReconciler) {
     reduxPersist = false;
@@ -32,7 +31,7 @@ export default function createStoreFul(models, options = defaultOptions) {
   // console.log(models);
   // console.log(newModels);
 
-  const reducers = prepareReducers(newModels, { root, reduxPersist });
+  const reducers = prepareReducers(newModels, { root: root, reduxPersist: reduxPersist });
   const rootSagas = prepareRootSaga(newModels);
   const initialState = prepareInitialState(newModels);
 
