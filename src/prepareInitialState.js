@@ -5,8 +5,8 @@ export default function(models = []) {
     const iniState = model.state;
     const namespace = model.namespace;
 
-    if (is.undef(iniState) || !namespace) {
-      Log.warn(`iniState || namespace is undefined`);
+    if (is.undef(iniState) || !is.string(namespace)) {
+      Log.warn(`iniState is undefined or namespace is not string`);
 
       return previous;
     }
