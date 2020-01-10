@@ -15,7 +15,8 @@ Usage Examples:
 
 #### Basic Usage
 Basic create Store without Persist [more about redux-persist here](https://github.com/rt2zz/redux-persist)
-[Example source code](https://github.com/barrydevp/redux-useful-beginner-tutorial)
+
+##### [Example source code](https://github.com/barrydevp/redux-useful-beginner-tutorial)
 
 ```js
 // counterModel.js
