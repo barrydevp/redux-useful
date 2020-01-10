@@ -14,10 +14,13 @@ const defaultOptions = { root: defaultRoot, reduxPersist: false };
 export default function createStoreFul(models, options = defaultOptions) {
   // console.log(options);
   let { root, reduxPersist } = options;
-  reduxPersist = !!reduxPersist;
 
-  const { persistConfig: rootPersistConfig } = root || {};
-  const { storage, stateReconciler } = rootPersistConfig || {};
+  reduxPersist = !!reduxPersist;
+  is.object(root) || (root = {});
+  is.object(rootPersistConfig) || (rootPersistConfig = {});
+
+  const { persistConfig: rootPersistConfig } = root;
+  const { storage, stateReconciler } = rootPersistConfig;
   // console.log(reduxPersist);
   if (!storage || !stateReconciler) {
     reduxPersist = false;
