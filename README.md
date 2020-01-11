@@ -110,15 +110,17 @@ const models = {
   counter: counterModel
 };
 
-const rootModel = {
-  persistConfig: {
-    key: "root",
-    storage: AsyncStorage,
+const options = {
+  root: {
+    persistConfig: {
+      key: "root",
+      storage: AsyncStorage,
+    }
   },
   reduxPersist: true
 }
 
-const { store, persistor } = createStoreFul(models, rootModel);
+const { store, persistor } = createStoreFul(models, options);
 
 export { store, persistor };
 
